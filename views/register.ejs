@@ -14,7 +14,6 @@
           <form action="/register" method="post">
             <div class="form-group">
               <input
-                type="email"
                 id="registrationEmail"
                 class="form-control"
                 name="userName"
@@ -23,23 +22,13 @@
                 maxlength="60"
                 placeholder="username"
               />
-              <input
-                type="password"
-                id="registrationPassword"
-                class="form-control"
-                name="password"
-                required
-                minlength="5"
-                maxlength="25"
-                placeholder="password"
-              />
             </div>
             <button onclick="storeRegistration()" class="btn-dark">
               register
             </button>
             <a
               style="margin-left: 40px"
-              href="https://afternoon-retreat-41766.herokuapp.com"
+              href="http://localhost:3000"
               class="btn-light"
               >Back to login</a
             >
@@ -53,15 +42,15 @@
 <script type="text/javascript">
   function storeRegistration() {
     var inputEmail = document.getElementById("registrationEmail");
-    var inputPassword = document.getElementById("registrationPassword");
+    // var inputPassword = document.getElementById("registrationPassword");
     localStorage.setItem("registrationEmail", inputEmail.value);
-    localStorage.setItem("registrationPassword", inputPassword.value);
+    // localStorage.setItem("registrationPassword", inputPassword.value);
   }
 </script>
 <script type="text/javascript">
   var storedEmailValue = localStorage.getItem("registrationEmail");
-  var storedPasswordValue = localStorage.getItem("registrationPassword");
+  // var storedPasswordValue = localStorage.getItem("registrationPassword");
 
   document.getElementById("registrationEmail").value = storedEmailValue;
-  document.getElementById("registrationPassword").value = storedPasswordValue;
+  // document.getElementById("registrationPassword").value = storedPasswordValue;
 </script>

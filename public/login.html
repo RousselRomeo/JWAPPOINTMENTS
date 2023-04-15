@@ -1,0 +1,274 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Tchatchou-Game</title>
+  </head>
+  <body id="welcomePage" class="" style="background-color: bisque">
+    <h1
+      class="display-3"
+      style="margin-bottom: 50px; font-weight: 600; font-size: 3em"
+    >
+      How far can you memorise!
+    </h1>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-5 col-md-10 col-lg-12">
+          <div class="card">
+            <div class="card-body">
+              <p style="color: red"><%= locals.email_notverified %></p>
+              <p style="color: red"><%= locals.error_messages %></p>
+              <p style="color: red"><%= locals.incorrect_password %></p>
+              <button onclick="login()" class="btn-light">logintest</button>
+              <form action="" method="">
+                <div class="form-group">
+                  <input
+                    id="email"
+                    class="form-control"
+                    name="userName"
+                    required
+                    minlength="5"
+                    maxlength="50"
+                    placeholder="username"
+                  />
+                </div>
+                <button onclick="store()" class="btn-light">login</button>
+
+                <a
+                  style="margin-left: 40px"
+                  href="http://localhost:3000/register"
+                  class="btn-light"
+                  >register</a
+                >
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var storedEmailValue = localStorage.getItem("email");
+      var storedPasswordValue = localStorage.getItem("password");
+      console.log(storedEmailValue);
+      document.getElementById("email").value = storedEmailValue;
+      // document.getElementById("password").value = storedPasswordValue;
+    </script>
+
+    <script type="text/javascript">
+      function store() {
+        var inputEmail = document.getElementById("email");
+        // var inputPassword = document.getElementById("password");
+        localStorage.setItem("email", inputEmail.value);
+        // localStorage.setItem("password", inputPassword.value);
+      }
+    </script>
+
+    <script type="text/javascript">
+      function login() {
+        // const password = $("#password").val();
+        const userName = $("#email").val();
+        console.log(userName);
+
+        $.ajax({
+          url: "http://localhost:3000/login",
+          type: "POST",
+          dataType: "json",
+          data: { userName: userName },
+
+          success: function (foundUsers, textStatus, jqXHR) {
+            //data - response from server
+            let welcomePage = "";
+            let num = 1;
+            console.log(foundUsers);
+            $("#welcomePage").html("");
+            let htmlWelcomePage = `
+                  <h1 style="margin-top: 50px">
+        Welcome <span style="color: red; font-weight: bold"></span>
+      </h1>
+      <h1>Highest Level:<span style="color: red; font-weight: bold"> </span></h1>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-5 col-md-10 col-lg-12">
+            <form action="/logout" method="get">
+              <button
+                style="
+                  height: 72px;
+                  width: 134px;
+                  border-top-width: 0px;
+                  border-bottom-width: 0px;
+                  border-left-width: 0px;
+                  border-right-width: 0px;
+                "
+                class="btn btn-primary"
+                type="submit"
+              >
+                logout
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-5 col-md-10 col-lg-12">
+            <header>
+              <h1 style="margin-top: 30px">Best Players</h1>
+            </header>
+            <button onclick="addAppoinment()">8:50 - 10:50</button>
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Name</th>
+                  <th>Highest Level</th>
+                </tr>
+              </thead>
+              <tbody  id="table">
+
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+                  `;
+
+            $("#welcomePage").append(htmlWelcomePage);
+
+            $.each(foundUsers, function (index, foundUser) {
+              populateTable = `
+
+
+                <tr id="deteteRows" onclick="deleteAppoinment(this)">
+                  <td class="rank"> ${num++}</td>
+
+                  <td class="team"> ${foundUser.name}</td>
+
+                  <td class="points">
+                    ${foundUser.time}  <button>supprimer</button>
+                  </td>
+                  <td class="rank " hidden>${foundUser._id}</td>
+                </tr>
+
+
+                  `;
+
+              $("#table").append(populateTable);
+            });
+          },
+        });
+      }
+    </script>
+
+    <script type="text/javascript">
+      function deleteAppoinment(foundUser) {
+        console.log(foundUser);
+        const foundUserId = foundUser.lastElementChild.innerHTML;
+        console.log(foundUserId);
+        $.ajax({
+          url: "http://localhost:3000/deleteAppointment",
+          type: "POST",
+          dataType: "json",
+          data: {
+            id: foundUserId,
+          },
+
+          success: function (foundUsers, textStatus, jqXHR) {
+            $("#table").empty();
+
+            let num = 1;
+            $.each(foundUsers, function (index, foundUser) {
+              populateTable = `
+
+
+                <tr  onclick="deleteAppoinment(this)">
+                  <td class="rank"> ${num++}</td>
+
+                  <td class="team"> ${foundUser.name}</td>
+
+                  <td class="points">
+                    ${foundUser.time}  <button>supprimer</button>
+                  </td>
+                  <td class="rank " hiden>${foundUser._id}</td>
+                </tr>
+
+
+                  `;
+              $("#table").append(populateTable);
+            });
+          },
+        });
+
+        /* $.post("http://localhost:3000/deleteAppointment", {
+          userId: JSON.stringify({
+            id: foundUserId,
+          }),
+          function(data, status) {
+            console.log(data);
+
+            //window.location.reload();
+          },
+        });*/
+      }
+
+      function addAppoinment() {
+        console.log("hello");
+
+        $.ajax({
+          url: "http://localhost:3000/addAppointment",
+          type: "POST",
+          dataType: "json",
+          data: {
+            time: "8:50-10:50",
+          },
+
+          success: function (foundUsers, textStatus, jqXHR) {
+            // $("#table").empty();
+
+            let num = 1;
+            $.each(foundUsers, function (index, foundUser) {
+              populateTable = `
+
+
+                <tr  onclick="deleteAppoinment(this)">
+                  <td class="rank"> ${num++}</td>
+
+                  <td class="team"> ${foundUser.playerName}</td>
+
+                  <td class="points">
+                    ${foundUser.time}  <button>supprimer</button>
+                  </td>
+                  <td class="rank " hiden>${foundUser._id}</td>
+                </tr>
+
+
+                  `;
+              $("#table").append(populateTable);
+            });
+          },
+        });
+      }
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  </body>
+</html>

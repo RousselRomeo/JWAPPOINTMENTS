@@ -1,17 +1,13 @@
 <%- include("partials/header"); -%>
 
 <h1 style="margin-top: 50px">
-  Welcome <span style="color: red; font-weight: bold"><%=playerName%>!</span>
+  Welcome <span style="color: red; font-weight: bold"></span>
 </h1>
-<h1>
-  Highest Level:<span style="color: red; font-weight: bold">
-    <%= playerhighestLevel%>
-  </span>
-</h1>
+<h1>Highest Level:<span style="color: red; font-weight: bold"> </span></h1>
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-5 col-md-10 col-lg-12">
-      <form action="/startGame" method="get">
+      <form action="/logout" method="get">
         <button
           style="
             height: 72px;
@@ -24,7 +20,7 @@
           class="btn btn-primary"
           type="submit"
         >
-          start game
+          logout
         </button>
       </form>
     </div>
@@ -37,7 +33,7 @@
       <header>
         <h1 style="margin-top: 30px">Best Players</h1>
       </header>
-
+      <button onclick="addAppoinment()">8:50 - 10:50</button>
       <table>
         <thead>
           <tr>
@@ -46,14 +42,18 @@
             <th>Highest Level</th>
           </tr>
         </thead>
-
         <tbody>
           <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
-          <%if(foundUser.playerName !== ""){ %>
-          <tr>
+          <%if(foundUser.playerName == "" ){ %>
+          <tr onclick="deleteAppoinment(this)">
             <td class="rank"><%= num++ %></td>
+
             <td class="team"><%= foundUser.playerName %></td>
-            <td class="points"><%= foundUser.playerhighestLevel %></td>
+            <% console.log("testttttt") %>
+            <td class="points">
+              <%= foundUser.time %> <button>supprimer</button>
+            </td>
+            <td class="rank" hidden><%=foundUser.id %></td>
           </tr>
           <%}%> <%})%>
         </tbody>
@@ -62,4 +62,32 @@
   </div>
 </div>
 
-<%- include("partials/footer"); -%>
+<script type="text/javascript">
+  function deleteAppoinment(foundUser) {
+    const foundUserId = foundUser.lastElementChild.innerHTML;
+    $.post("http://localhost:3000/deleteAppointment", {
+      userId: JSON.stringify({
+        id: foundUserId,
+      }),
+      function(data, status) {
+        console.log(data);
+
+        //window.location.reload();
+      },
+    });
+  }
+
+  function addAppoinment() {
+    console.log("hello");
+    $.post("http://localhost:3000/addAppointment", {
+      bookedTime: JSON.stringify({
+        time: "8:50-10:50",
+      }),
+      function(data, status) {
+        console.log(status);
+        console.log(data);
+      },
+    });
+  }
+</script>
+<%-include("partials/footer"); -%>
