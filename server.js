@@ -61,6 +61,7 @@ const userSchema = new mongoose.Schema({
     required: [true, "please specify name a name in the name field"],
   },
   time: { type: String, default: "" },
+  deleteButton: { type: Boolean, default: false },
 });
 
 const User = mongoose.model("Appoinment", userSchema);
@@ -70,6 +71,24 @@ app.get("/", function (req, res) {
 });
 
 app.get("/logout", function (req, res) {
+  const id = req.session.userId;
+  if (!id) {
+    res.sendFile(__dirname + "/public/login.html");
+  }
+  User.findOne({ _id: id }, function (err, foundUser) {
+    if (err) {
+      console.log(err);
+    }
+
+    if (!foundUser) {
+      return;
+    } else {
+      foundUser.deleteButton = false;
+      foundUser.save();
+      console.log(foundUser);
+    }
+  });
+
   //console.log(req.session);
   req.session.destroy(function (err) {
     if (err) {
@@ -143,6 +162,9 @@ app.post("/login", function (req, res) {
       // res.render("welcomePage", { playerName: foundUser.playerName });
 
       req.session.userId = foundUser._id;
+      foundUser.deleteButton = true;
+      foundUser.save();
+      console.log(foundUser);
       User.find({})
         .limit(10)
         .exec(function (err, foundUsers) {
@@ -154,6 +176,7 @@ app.post("/login", function (req, res) {
                 playerhighestLevel: foundUser.time,
                 foundUsers: foundUsers,
               });*/
+
             res.send(foundUsers);
           }
         });
@@ -188,13 +211,16 @@ app.post("/deleteAppointment", function (req, res) {
 
 app.post("/addAppointment", function (req, res) {
   const { time } = req.body;
-
+  console.log(time);
   // const userId = req.session.userId;
 
   const userId = req.session.userId;
   console.log(userId);
   User.findOne({ _id: userId }, function (err, foundUser) {
-    console.log(foundUser.time);
+    if (!foundUser) {
+      //TODO
+      return;
+    }
     if (foundUser.time === time) {
       console.log("hello");
       return;

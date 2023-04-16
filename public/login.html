@@ -155,6 +155,10 @@
             $("#welcomePage").append(htmlWelcomePage);
 
             $.each(foundUsers, function (index, foundUser) {
+              const deleteButton = foundUser.deleteButton
+                ? "<button>supprimer</button>"
+                : "";
+
               populateTable = `
 
 
@@ -164,7 +168,7 @@
                   <td class="team"> ${foundUser.name}</td>
 
                   <td class="points">
-                    ${foundUser.time}  <button>supprimer</button>
+                    ${foundUser.time} ${deleteButton}
                   </td>
                   <td class="rank " hidden>${foundUser._id}</td>
                 </tr>
@@ -197,6 +201,10 @@
 
             let num = 1;
             $.each(foundUsers, function (index, foundUser) {
+              const deleteButton = foundUser.deleteButton
+                ? "<button>supprimer</button>"
+                : "";
+
               populateTable = `
 
 
@@ -206,7 +214,7 @@
                   <td class="team"> ${foundUser.name}</td>
 
                   <td class="points">
-                    ${foundUser.time}  <button>supprimer</button>
+                    ${foundUser.time}  ${deleteButton}
                   </td>
                   <td class="rank " hiden>${foundUser._id}</td>
                 </tr>
@@ -242,20 +250,24 @@
           },
 
           success: function (foundUsers, textStatus, jqXHR) {
-            // $("#table").empty();
+            $("#table").empty();
 
             let num = 1;
             $.each(foundUsers, function (index, foundUser) {
+              const deleteButton = foundUser.deleteButton
+                ? "<button>supprimer</button>"
+                : "";
+
               populateTable = `
 
 
                 <tr  onclick="deleteAppoinment(this)">
                   <td class="rank"> ${num++}</td>
 
-                  <td class="team"> ${foundUser.playerName}</td>
+                  <td class="team"> ${foundUser.name}</td>
 
                   <td class="points">
-                    ${foundUser.time}  <button>supprimer</button>
+                    ${foundUser.time}  ${deleteButton}
                   </td>
                   <td class="rank " hiden>${foundUser._id}</td>
                 </tr>
