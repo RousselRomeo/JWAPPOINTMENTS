@@ -58,8 +58,9 @@ mongoose.connect("mongodb://localhost:27017/FieldService", {
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "please specify name a name in the name field"],
+    //required: [true, "please specify name a name in the name field"],
   },
+  name2: String,
   time: { type: String, default: "" },
   deleteButton: { type: Boolean, default: false },
 });
@@ -109,6 +110,7 @@ app
     console.log("rrrrrrrrrr");
     const newUser = new User({
       name: req.body.userName,
+      name2: req.body.userName,
     });
 
     User.findOne({ name: req.body.userName }, function (err, foundUser) {
@@ -145,7 +147,7 @@ app.post("/login", function (req, res) {
   const userName = req.body.userName;
   //const password = req.body.password;
 
-  User.findOne({ name: userName }, function (err, foundUser) {
+  User.findOne({ name2: userName }, function (err, foundUser) {
     if (err) {
       console.log(err);
     }
@@ -193,10 +195,21 @@ app.post("/deleteAppointment", function (req, res) {
   console.log(id);
   const userId = req.session.userId;
 
-  User.findByIdAndDelete(id, function (err) {
+  User.findOne({ _id: userId }, function (err, foundUser) {
+    if (err) {
+      console.log(err);
+    } else {
+      foundUser.name = "";
+      foundUser.time = "";
+      foundUser.save();
+      console.log(foundUser);
+    }
+  });
+
+  /* User.findByIdAndDelete(id, function (err) {
     if (err) console.log(err);
     console.log("Successful deletion");
-  });
+  });*/
 
   User.find({})
     .limit(10)
@@ -220,6 +233,12 @@ app.post("/addAppointment", function (req, res) {
     if (!foundUser) {
       //TODO
       return;
+    }
+
+    if (foundUser.name === "") {
+      foundUser.name = foundUser.name2;
+      foundUser.save();
+      console.log("adding no name");
     }
     if (foundUser.time === time) {
       console.log("hello");

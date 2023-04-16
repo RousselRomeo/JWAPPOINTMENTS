@@ -83,6 +83,7 @@
 
     <script type="text/javascript">
       function login() {
+        store();
         // const password = $("#password").val();
         const userName = $("#email").val();
         console.log(userName);
@@ -216,7 +217,7 @@
                   <td class="points">
                     ${foundUser.time}  ${deleteButton}
                   </td>
-                  <td class="rank " hiden>${foundUser._id}</td>
+                  <td class="rank " hidden>${foundUser._id}</td>
                 </tr>
 
 
@@ -237,7 +238,9 @@
           },
         });*/
       }
+    </script>
 
+    <script type="text/javascript">
       function addAppoinment() {
         console.log("hello");
 
@@ -251,7 +254,7 @@
 
           success: function (foundUsers, textStatus, jqXHR) {
             $("#table").empty();
-
+            console.log("gooo");
             let num = 1;
             $.each(foundUsers, function (index, foundUser) {
               const deleteButton = foundUser.deleteButton
@@ -269,7 +272,7 @@
                   <td class="points">
                     ${foundUser.time}  ${deleteButton}
                   </td>
-                  <td class="rank " hiden>${foundUser._id}</td>
+                  <td class="rank " hidden>${foundUser._id}</td>
                 </tr>
 
 
