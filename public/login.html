@@ -134,7 +134,7 @@
             <header>
               <h1 style="margin-top: 30px">Best Players</h1>
             </header>
-            <button onclick="addAppoinment()">8:50 - 10:50</button>
+            <button onclick="addAppoinment()">Vendredi 8:50 - 10:50</button>
             <table>
               <thead>
                 <tr>
@@ -144,6 +144,20 @@
                 </tr>
               </thead>
               <tbody  id="table">
+
+
+              </tbody>
+            </table>
+        <button onclick="addAppoinment2()">samedi 11:50 - 13:50</button>
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Name</th>
+                  <th>Highest Level</th>
+                </tr>
+              </thead>
+              <tbody  id="table2">
 
 
               </tbody>
@@ -255,6 +269,7 @@
           success: function (foundUsers, textStatus, jqXHR) {
             $("#table").empty();
             console.log("gooo");
+            console.log(foundUsers);
             let num = 1;
             $.each(foundUsers, function (index, foundUser) {
               const deleteButton = foundUser.deleteButton
@@ -278,6 +293,51 @@
 
                   `;
               $("#table").append(populateTable);
+              $("#table2").append(populateTable);
+            });
+          },
+        });
+      }
+    </script>
+
+    <script type="text/javascript">
+      function addAppoinment2() {
+        console.log("hello");
+
+        $.ajax({
+          url: "http://localhost:3000/addAppointment2",
+          type: "POST",
+          dataType: "json",
+          data: {
+            time: "8:50-10:50",
+          },
+
+          success: function (foundUsers, textStatus, jqXHR) {
+            $("#table2").empty();
+            console.log("2nd table");
+            let num = 1;
+            $.each(foundUsers, function (index, foundUser) {
+              const deleteButton = foundUser.deleteButton
+                ? "<button>supprimer</button>"
+                : "";
+
+              populateTable = `
+
+
+            <tr  onclick="deleteAppoinment(this)">
+              <td class="rank"> ${num++}</td>
+
+              <td class="team"> ${foundUser.name}</td>
+
+              <td class="points">
+                ${foundUser.time}  ${deleteButton}
+              </td>
+              <td class="rank " hidden>${foundUser._id}</td>
+            </tr>
+
+
+              `;
+              $("#table2").append(populateTable);
             });
           },
         });

@@ -48,12 +48,15 @@ app.use(
 );
 
 app.use(express.static("public"));
-//"mongodb+srv://procees.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/userDB"
-//""
-mongoose.connect("mongodb://localhost:27017/FieldService", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+//"mongodb+srv://process.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/userDB"
+//"mongodb://localhost:27017/FieldService"
+mongoose.connect(
+  "mongodb+srv://process.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/FieldService",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -194,7 +197,9 @@ app.post("/deleteAppointment", function (req, res) {
   const { id } = req.body;
   console.log(id);
   const userId = req.session.userId;
-
+  console.log(userId);
+  if (id !== userId) return;
+  console.log("check id");
   User.findOne({ _id: userId }, function (err, foundUser) {
     if (err) {
       console.log(err);
@@ -214,6 +219,7 @@ app.post("/deleteAppointment", function (req, res) {
   User.find({})
     .limit(10)
     .exec(function (err, foundUsers) {
+      console.log(foundUsers);
       if (err) {
         console.log(err);
       } else {
@@ -223,6 +229,52 @@ app.post("/deleteAppointment", function (req, res) {
 });
 
 app.post("/addAppointment", function (req, res) {
+  const { time } = req.body;
+  console.log(time);
+  // const userId = req.session.userId;
+
+  const userId = req.session.userId;
+  console.log(userId);
+  User.findOne({ _id: userId }, function (err, foundUser) {
+    if (!foundUser) {
+      //TODO
+      return;
+    }
+
+    if (foundUser.name === "") {
+      foundUser.name = foundUser.name2;
+      // foundUser.save();
+      console.log("adding no name");
+    }
+    if (foundUser.time === time) {
+      console.log("hello");
+      return;
+    } else {
+      foundUser.time = time;
+      foundUser.save();
+      User.find({})
+        .limit(20)
+        .exec(function (err, foundUsers) {
+          console.log(foundUsers);
+          if (err) {
+            console.log(err);
+          } else {
+            res.send(foundUsers);
+          }
+        });
+    }
+
+    console.log(foundUser);
+    if (err) {
+      console.log(err);
+    } else {
+      //console.log("hellllllo");
+    }
+  });
+});
+
+app.post("/addAppointment2", function (req, res) {
+  console.log("2ndtable");
   const { time } = req.body;
   console.log(time);
   // const userId = req.session.userId;
