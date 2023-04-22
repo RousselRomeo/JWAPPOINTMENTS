@@ -250,6 +250,7 @@ app.post("/addAppointment", function (req, res) {
     }
     if (foundUser.time === time && foundUser.table1 === true) {
       console.log("hello");
+      
       return;
     } else {
       foundUser.time = time;

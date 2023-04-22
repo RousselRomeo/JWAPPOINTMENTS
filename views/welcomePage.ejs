@@ -1,4 +1,5 @@
 <%- include("partials/header"); -%>
+<button onclick="reload()">test </button>
 
 <h1 style="margin-top: 50px">
   Welcome <span style="color: red; font-weight: bold"></span>
@@ -119,6 +120,11 @@
   </div>
 </div>
 
+<script>
+  function reload() {
+    window.location.reload();
+  }
+</script>
 <script type="text/javascript">
   function deleteAppoinment(foundUser) {
     console.log("works");

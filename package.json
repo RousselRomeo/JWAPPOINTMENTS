@@ -30,6 +30,7 @@
     "mongoose": "^5.13.17",
     "nodemailer": "^6.9.1",
     "randomstring": "^1.1.5",
+    "reload": "^3.2.1",
     "session": "^0.1.0"
   }
 }
