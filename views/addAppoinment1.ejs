@@ -59,7 +59,6 @@
         </thead>
         <tbody>
           <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
-          <%if(foundUser.table1){%>
           <tr onclick="deleteAppoinment(this)">
             <td class="rank"><%= num++ %></td>
 
@@ -70,49 +69,7 @@
             </td>
             <td class="rank" hidden><%=foundUser.id %></td>
           </tr>
-          <%}%> <%})%>
-        </tbody>
-      </table>
-      <div>Table 2</div>
-
-      <form action="/addAppointment2" method="post">
-        <div class="form-group">
-          <input
-            id="email"
-            class="form-control"
-            name="time"
-            value="11:50 - 12:50"
-            required
-            minlength="5"
-            maxlength="50"
-            placeholder="username"
-          />
-        </div>
-        <button class="btn-light">add appointmentP2</button>
-      </form>
-      <button onclick="addAppoinment()">vendredi 11.50 - 13:50</button>
-      <table>
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Name</th>
-            <th>Highest Level</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
-          <%if(foundUser.table2){%>
-          <tr onclick="deleteAppoinment(this)">
-            <td class="rank"><%= num++ %></td>
-
-            <td class="team"><%= foundUser.name%></td>
-
-            <td class="points">
-              <%= foundUser.time %> <button>supprimer</button>
-            </td>
-            <td class="rank" hidden><%=foundUser.id %></td>
-          </tr>
-          <%}%> <%})%>
+          <%})%> <%window.location.reload()%>
         </tbody>
       </table>
     </div>
@@ -121,7 +78,6 @@
 
 <script type="text/javascript">
   function deleteAppoinment(foundUser) {
-    console.log("works");
     const foundUserId = foundUser.lastElementChild.innerHTML;
     $.post("http://localhost:3000/deleteAppointment", {
       userId: JSON.stringify({

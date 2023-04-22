@@ -50,13 +50,10 @@ app.use(
 app.use(express.static("public"));
 //"mongodb+srv://process.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/userDB"
 //"mongodb://localhost:27017/FieldService"
-mongoose.connect(
-  "mongodb+srv://process.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/FieldService",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+mongoose.connect("mongodb://localhost:27017/FieldService", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -64,6 +61,8 @@ const userSchema = new mongoose.Schema({
     //required: [true, "please specify name a name in the name field"],
   },
   name2: String,
+  table1: { type: Boolean, default: false },
+  table2: { type: Boolean, default: false },
   time: { type: String, default: "" },
   deleteButton: { type: Boolean, default: false },
 });
@@ -170,19 +169,22 @@ app.post("/login", function (req, res) {
       foundUser.deleteButton = true;
       foundUser.save();
       console.log(foundUser);
+
+      console.log("testllll");
       User.find({})
         .limit(10)
         .exec(function (err, foundUsers) {
           if (err) {
             console.log(err);
           } else {
+            console.log("eomeooo");
             //res.sendFile(__dirname + "/public/welcomePage.html");
-            /* res.render("welcomePage", {
-                playerhighestLevel: foundUser.time,
-                foundUsers: foundUsers,
-              });*/
+            res.render("welcomePage", {
+              //playerhighestLevel: foundUser.time,
+              foundUsers: foundUsers,
+            });
 
-            res.send(foundUsers);
+            //res.send(foundUsers);
           }
         });
 
@@ -223,7 +225,8 @@ app.post("/deleteAppointment", function (req, res) {
       if (err) {
         console.log(err);
       } else {
-        res.send(foundUsers);
+        // res.send(foundUsers);
+        res.render("welcomePage", { foundUsers: foundUsers });
       }
     });
 });
@@ -231,7 +234,6 @@ app.post("/deleteAppointment", function (req, res) {
 app.post("/addAppointment", function (req, res) {
   const { time } = req.body;
   console.log(time);
-  // const userId = req.session.userId;
 
   const userId = req.session.userId;
   console.log(userId);
@@ -246,11 +248,13 @@ app.post("/addAppointment", function (req, res) {
       // foundUser.save();
       console.log("adding no name");
     }
-    if (foundUser.time === time) {
+    if (foundUser.time === time && foundUser.table1 === true) {
       console.log("hello");
       return;
     } else {
       foundUser.time = time;
+      foundUser.table2 = false;
+      foundUser.table1 = true;
       foundUser.save();
       User.find({})
         .limit(20)
@@ -259,7 +263,8 @@ app.post("/addAppointment", function (req, res) {
           if (err) {
             console.log(err);
           } else {
-            res.send(foundUsers);
+            console.log("testtest");
+            res.render("welcomePage", { foundUsers: foundUsers });
           }
         });
     }
@@ -292,11 +297,13 @@ app.post("/addAppointment2", function (req, res) {
       foundUser.save();
       console.log("adding no name");
     }
-    if (foundUser.time === time) {
+    if (foundUser.time === time && foundUser.table2 === true) {
       console.log("hello");
       return;
     } else {
       foundUser.time = time;
+      foundUser.table1 = false;
+      foundUser.table2 = true;
       foundUser.save();
       User.find({})
         .limit(20)
@@ -305,7 +312,7 @@ app.post("/addAppointment2", function (req, res) {
           if (err) {
             console.log(err);
           } else {
-            res.send(foundUsers);
+            res.render("welcomePage", { foundUsers: foundUsers });
           }
         });
     }
