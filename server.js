@@ -50,7 +50,7 @@ app.use(
 app.use(express.static("public"));
 //"mongodb+srv://process.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/userDB"
 //"mongodb://localhost:27017/FieldService"
-mongoose.connect("mongodb://localhost:27017/FieldService", {
+mongoose.connect("mongodb+srv://process.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/FieldService", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
