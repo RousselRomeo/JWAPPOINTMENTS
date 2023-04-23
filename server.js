@@ -70,7 +70,8 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("Appoinment", userSchema);
 
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + "/public/login.html");
+  //res.sendFile(__dirname + "/public/login.html");
+  res.render("login")
 });
 
 app.get("/logout", function (req, res) {
