@@ -77,7 +77,8 @@ app.get("/", function (req, res) {
 app.get("/logout", function (req, res) {
   const id = req.session.userId;
   if (!id) {
-    res.sendFile(__dirname + "/public/login.html");
+    //res.sendFile(__dirname + "/public/login.html");
+    res.render("login");
   }
   User.findOne({ _id: id }, function (err, foundUser) {
     if (err) {
@@ -98,7 +99,8 @@ app.get("/logout", function (req, res) {
     if (err) {
       console.log(err);
     } else {
-      res.redirect("/");
+     // res.redirect("/");
+     res.render("login")
     }
   });
 });
@@ -159,7 +161,8 @@ app.post("/login", function (req, res) {
         "error",
         "No user found with the specified name,Please Register!!"
       );
-      res.redirect("/");
+      //res.redirect("/");
+      res.render("login")
     } else {
       //(foundUser.password === password && foundUser.playerName === "")
       //req.session.userId = foundUser._id;
