@@ -1,8 +1,10 @@
 "use strict";
 
+
 require("dotenv").config();
 const express = require("express");
 const app = express();
+
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const randomstring = require("randomstring");
@@ -12,6 +14,10 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const ejs = require("ejs");
 const fs = require("fs");
+const helper = require("./helper");
+
+const path = require('path')
+app.set('views','views')
 
 app.set("view engine", "ejs");
 
@@ -47,7 +53,7 @@ app.use(
   })
 );
 
-app.use(express.static("public"));
+  app.use(express.static("public"));
 //"mongodb+srv://process.env.MUNGODB_USER:process.env.PASSWORD@cluster0.mxzx2.mongodb.net/userDB"
 //"mongodb://localhost:27017/FieldService"
 mongoose.connect("mongodb+srv://roussel:tchatchou111@cluster0.mxzx2.mongodb.net/FieldService", {
@@ -70,6 +76,8 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("Appoinment", userSchema);
 
 app.get("/", function (req, res) {
+
+
   //res.sendFile(__dirname + "/public/login.html");
   res.render("login")
 });
@@ -80,20 +88,7 @@ app.get("/logout", function (req, res) {
     //res.sendFile(__dirname + "/public/login.html");
     res.render("login");
   }
-  User.findOne({ _id: id }, function (err, foundUser) {
-    if (err) {
-      console.log(err);
-    }
-
-    if (!foundUser) {
-      return;
-    } else {
-      foundUser.deleteButton = false;
-      foundUser.save();
-      console.log(foundUser);
-    }
-  });
-
+  
   //console.log(req.session);
   req.session.destroy(function (err) {
     if (err) {
@@ -152,7 +147,7 @@ app.post("/login", function (req, res) {
   const userName = req.body.userName;
   //const password = req.body.password;
 
-  User.findOne({ name2: userName }, function (err, foundUser) {
+  User.findOne({ name2: userName },  function (err, foundUser) {
     if (err) {
       console.log(err);
     }
@@ -175,9 +170,7 @@ app.post("/login", function (req, res) {
       console.log(foundUser);
 
       console.log("testllll");
-      User.find({})
-        .limit(10)
-        .exec(function (err, foundUsers) {
+      User.find({}).exec(function (err, foundUsers) {
           if (err) {
             console.log(err);
           } else {
@@ -185,7 +178,7 @@ app.post("/login", function (req, res) {
             //res.sendFile(__dirname + "/public/welcomePage.html");
             res.render("welcomePage", {
               //playerhighestLevel: foundUser.time,
-              foundUsers: foundUsers,
+              foundUsers: foundUsers,helper:helper
             });
 
             //res.send(foundUsers);
@@ -199,8 +192,10 @@ app.post("/login", function (req, res) {
 });
 
 app.post("/deleteAppointment", function (req, res) {
-  console.log("hello");
+  console.log("hellotesttttt");
   const { id } = req.body;
+
+  
   console.log(id);
   const userId = req.session.userId;
   console.log(userId);
@@ -214,6 +209,9 @@ app.post("/deleteAppointment", function (req, res) {
       foundUser.time = "";
       foundUser.save();
       console.log(foundUser);
+      console.log("redirect")
+      res.redirect("login");
+
     }
   });
 
@@ -221,8 +219,11 @@ app.post("/deleteAppointment", function (req, res) {
     if (err) console.log(err);
     console.log("Successful deletion");
   });*/
+ 
+  //res.redirect("/login")
 
-  User.find({})
+
+  /*User.find({})
     .limit(10)
     .exec(function (err, foundUsers) {
       console.log(foundUsers);
@@ -232,16 +233,17 @@ app.post("/deleteAppointment", function (req, res) {
         // res.send(foundUsers);
         res.render("welcomePage", { foundUsers: foundUsers });
       }
-    });
+    });*/
 });
 
-app.post("/addAppointment", function (req, res) {
+app.post("/addAppointment",  function (req, res) {
+  console.log(helper)
   const { time } = req.body;
   console.log(time);
 
   const userId = req.session.userId;
   console.log(userId);
-  User.findOne({ _id: userId }, function (err, foundUser) {
+   User.findOne({ _id: userId }, function (err, foundUser) {
     if (!foundUser) {
       //TODO
       return;
@@ -255,33 +257,40 @@ app.post("/addAppointment", function (req, res) {
     if (foundUser.time === time && foundUser.table1 === true) {
       console.log("hello");
       
-      return;
+  User.find({}).exec(function (err, foundUsers) {
+    console.log(foundUsers);
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("table1");
+      res.render("welcomePage", { foundUsers: foundUsers, helper:helper});
+    }
+  });
+      
+      
     } else {
       foundUser.time = time;
       foundUser.table2 = false;
       foundUser.table1 = true;
       foundUser.save();
-      User.find({})
-        .limit(20)
-        .exec(function (err, foundUsers) {
-          console.log(foundUsers);
-          if (err) {
-            console.log(err);
-          } else {
-            console.log("testtest");
-            res.render("welcomePage", { foundUsers: foundUsers });
-          }
-        });
+      
     }
 
-    console.log(foundUser);
+   
+  });
+
+  User.find({}).exec(function (err, foundUsers) {
+    console.log(foundUsers);
     if (err) {
       console.log(err);
     } else {
-      //console.log("hellllllo");
+      console.log("table1");
+      res.render("welcomePage", { foundUsers: foundUsers, helper:helper});
     }
   });
 });
+
+
 
 app.post("/addAppointment2", function (req, res) {
   console.log("2ndtable");
@@ -291,10 +300,10 @@ app.post("/addAppointment2", function (req, res) {
 
   const userId = req.session.userId;
   console.log(userId);
-  User.findOne({ _id: userId }, function (err, foundUser) {
+  User.findOne({ _id: userId },  function (err, foundUser) {
     if (!foundUser) {
       //TODO
-      return;
+   
     }
 
     if (foundUser.name === "") {
@@ -303,17 +312,25 @@ app.post("/addAppointment2", function (req, res) {
       console.log("adding no name");
     }
     if (foundUser.time === time && foundUser.table2 === true) {
-      console.log("hello");
-      return;
+      
+  User.find({}).exec(function (err, foundUsers) {
+    console.log(foundUsers);
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("table1");
+      res.render("welcomePage", { foundUsers: foundUsers, helper:helper});
+    }
+  });
+      
     } else {
       foundUser.time = time;
       foundUser.table1 = false;
       foundUser.table2 = true;
       foundUser.save();
-      User.find({})
-        .limit(20)
-        .exec(function (err, foundUsers) {
-          console.log(foundUsers);
+      console.log("table2")
+      User.find({}).exec(function (err, foundUsers) {
+          //console.log(foundUsers);
           if (err) {
             console.log(err);
           } else {

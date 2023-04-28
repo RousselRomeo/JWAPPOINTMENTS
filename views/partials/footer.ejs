@@ -1,64 +1,30 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 
+<script>
+  function reload() {
+    window.location.reload();
+  }
+</script>
 <script type="text/javascript">
-    function deleteAppoinment(foundUser) {
-      console.log(foundUser);
+  function deleteAppoinment(foundUser) {
+    console.log("works");
+    const foundUserId = foundUser.lastElementChild.innerHTML;
+    console.log(foundUserId);
+    $.post("http://localhost:3000/deleteAppointment", {
+      userId: JSON.stringify({
+        id: foundUserId,
+      }),
+      function(data, status) {
+        console.log(data);
 
-      console.log("pitouuuuuuuuu")
-     
-      const foundUserId = foundUser.lastElementChild.innerHTML;
-      console.log(foundUserId);
-      
-      $.ajax({
-        url: "http://localhost:3000/deleteAppointment",
-        type: "POST",
-        dataType: "json",
-        data: {
-          id: foundUserId,
-        },
+        //window.location.reload();
+      },
+    });
+  }
 
-        success: function (foundUsers, textStatus, jqXHR) {
-          $("#table").empty();
+ 
+</script>
 
-          let num = 1;
-          $.each(foundUsers, function (index, foundUser) {
-            const deleteButton = foundUser.deleteButton
-              ? "<button>supprimer</button>"
-              : "";
-
-            populateTable = `
-
-
-              <tr  onclick="deleteAppoinment(this)">
-                <td class="rank"> ${num++}</td>
-
-                <td class="team"> ${foundUser.name}</td>
-
-                <td class="points">
-                  ${foundUser.time}  ${deleteButton}
-                </td>
-                <td class="rank " hidden>${foundUser._id}</td>
-              </tr>
-
-
-                `;
-            $("#table").append(populateTable);
-          });
-        },
-      });
-
-      /* $.post("http://localhost:3000/deleteAppointment", {
-        userId: JSON.stringify({
-          id: foundUserId,
-        }),
-        function(data, status) {
-          console.log(data);
-
-          //window.location.reload();
-        },
-      });*/
-    }
-  </script>
 </body>
 </html>

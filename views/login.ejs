@@ -32,7 +32,7 @@
             <button onclick="store()" class="btn-light">login</button>
             <a
               style="margin-left: 40px"
-              href="https://cyan-outrageous-rooster.cyclic.app/register"
+              href="http://localhost:3000/register"
               class="btn-light"
               >register</a
             >
@@ -56,7 +56,7 @@
     var inputEmail = document.getElementById("email");
     var inputPassword = document.getElementById("password");
     localStorage.setItem("email", inputEmail.value);
-    localStorage.setItem("password", inputPassword.value);
+    //localStorage.setItem("password", inputPassword.value);
   }
 
   function login() {

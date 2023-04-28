@@ -1,38 +1,15 @@
-<%- include("partials/header"); -%>
-<button onclick="reload()">test </button>
 
-<h1 style="margin-top: 50px">
-  Welcome <span style="color: red; font-weight: bold"></span>
-</h1>
-<h1>Highest Level:<span style="color: red; font-weight: bold"> </span></h1>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-5 col-md-10 col-lg-12">
-      <form action="/logout" method="get">
-        <button
-          style="
-            height: 72px;
-            width: 134px;
-            border-top-width: 0px;
-            border-bottom-width: 0px;
-            border-left-width: 0px;
-            border-right-width: 0px;
-          "
-          class="btn btn-primary"
-          type="submit"
-        >
-          logout
-        </button>
-      </form>
-    </div>
-  </div>
-</div>
+<%-include("partials/header"); %>
+
+
+<main>
+
 
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-5 col-md-10 col-lg-12">
       <header>
-        <h1 style="margin-top: 30px">Best Players</h1>
+        <h1 style="margin-top: 30px"></h1>
       </header>
       <form action="/addAppointment" method="post">
         <div class="form-group">
@@ -45,36 +22,47 @@
             minlength="5"
             maxlength="50"
             placeholder="username"
+            hidden
           />
         </div>
-        <button class="btn-light">add appointmentP</button>
+        <button class="btn-success btn-sm">Ajouter</button>
       </form>
-      <button onclick="addAppoinment()">8:50 - 10:50</button>
+      <button class="btn-info btn-sm" onclick="">Vendredi 8:50 - 10:50</button>
       <table>
         <thead>
           <tr>
-            <th>Rank</th>
-            <th>Name</th>
-            <th>Highest Level</th>
+            <th></th>
+            <th>Nom</th>
+            <th>Heure</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="clearTable1">
+    
           <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
+           
           <%if(foundUser.table1){%>
-          <tr onclick="deleteAppoinment(this)">
-            <td class="rank"><%= num++ %></td>
+          <tr >
+            <td class="rank"><%- num++ %></td>
 
-            <td class="team"><%= foundUser.name%></td>
-
+            <td class="team"><%- foundUser.name%></td>
+            
             <td class="points">
-              <%= foundUser.time %> <button>supprimer</button>
+              <%- foundUser.time %> <button class="btn-primary btn-sm">supprimer</button>
             </td>
-            <td class="rank" hidden><%=foundUser.id %></td>
+            <td class="rank" hidden><%-foundUser.id %></td>
           </tr>
-          <%}%> <%})%>
+          <%}%>
+          
+          
+         
+          
+          
+          <%})%>
+    
+          
         </tbody>
       </table>
-      <div>Table 2</div>
+      <div style=" margin-top:90px" ></div>
 
       <form action="/addAppointment2" method="post">
         <div class="form-group">
@@ -87,17 +75,20 @@
             minlength="5"
             maxlength="50"
             placeholder="username"
+            hidden
           />
         </div>
-        <button class="btn-light">add appointmentP2</button>
+        <button class="btn-success btn-sm">Ajouter</button>
       </form>
-      <button onclick="addAppoinment()">vendredi 11.50 - 13:50</button>
+      
+      
+      <button class="btn-info btn-sm" onclick="">Samedi 11.50 - 13:50</button>
       <table>
         <thead>
           <tr>
-            <th>Rank</th>
-            <th>Name</th>
-            <th>Highest Level</th>
+            <th></th>
+            <th>Nom</th>
+            <th>Heure</th>
           </tr>
         </thead>
         <tbody>
@@ -109,7 +100,7 @@
             <td class="team"><%= foundUser.name%></td>
 
             <td class="points">
-              <%= foundUser.time %> <button>supprimer</button>
+              <%= foundUser.time %> <button class="btn-primary btn-sm">supprimer</button>
             </td>
             <td class="rank" hidden><%=foundUser.id %></td>
           </tr>
@@ -120,40 +111,6 @@
   </div>
 </div>
 
-<script>
-  function reload() {
-    window.location.reload();
-  }
-</script>
-<script type="text/javascript">
-  function deleteAppoinment(foundUser) {
-    console.log("works");
-    const foundUserId = foundUser.lastElementChild.innerHTML;
-    $.post("https://cyan-outrageous-rooster.cyclic.app/deleteAppointment", {
-      userId: JSON.stringify({
-        id: foundUserId,
-      }),
-      function(data, status) {
-        console.log(data);
-
-        //window.location.reload();
-      },
-    });
-  }
-
-  function addAppoinment() {
-    console.log("hello");
-    $.post("https://cyan-outrageous-rooster.cyclic.app/addAppointment", {
-      bookedTime: JSON.stringify({
-        time: "8:50-10:50",
-      }),
-      function(data, status) {
-        console.log(status);
-        console.log(data);
-      },
-    });
-  }
-</script>
-
+</main>
 
 <%-include("partials/footer"); -%>
