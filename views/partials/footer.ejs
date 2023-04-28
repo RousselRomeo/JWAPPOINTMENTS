@@ -11,7 +11,7 @@
     console.log("works");
     const foundUserId = foundUser.lastElementChild.innerHTML;
     console.log(foundUserId);
-    $.post("http://localhost:3000/deleteAppointment", {
+    $.post("https://cyan-outrageous-rooster.cyclic.app/deleteAppointment", {
       userId: JSON.stringify({
         id: foundUserId,
       }),

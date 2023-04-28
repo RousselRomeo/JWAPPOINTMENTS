@@ -79,7 +79,7 @@
 <script type="text/javascript">
   function deleteAppoinment(foundUser) {
     const foundUserId = foundUser.lastElementChild.innerHTML;
-    $.post("http://localhost:3000/deleteAppointment", {
+    $.post("https://cyan-outrageous-rooster.cyclic.app/deleteAppointment", {
       userId: JSON.stringify({
         id: foundUserId,
       }),
@@ -93,7 +93,7 @@
 
   function addAppoinment() {
     console.log("hello");
-    $.post("http://localhost:3000/addAppointment", {
+    $.post("https://cyan-outrageous-rooster.cyclic.app/addAppointment", {
       bookedTime: JSON.stringify({
         time: "8:50-10:50",
       }),
