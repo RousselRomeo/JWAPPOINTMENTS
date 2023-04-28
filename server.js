@@ -193,24 +193,23 @@ app.post("/login", function (req, res) {
 
 app.post("/deleteAppointment", function (req, res) {
   console.log("hellotesttttt");
-  const { id } = req.body;
+  const { id } = JSON.parse(req.body.userId)
 
-  
   console.log(id);
   const userId = req.session.userId;
   console.log(userId);
   if (id !== userId) return;
-  console.log("check id");
+ 
   User.findOne({ _id: userId }, function (err, foundUser) {
     if (err) {
       console.log(err);
     } else {
+      console.log("found id");
       foundUser.name = "";
       foundUser.time = "";
       foundUser.save();
-      console.log(foundUser);
-      console.log("redirect")
-      res.redirect("login");
+      
+   
 
     }
   });
@@ -223,7 +222,7 @@ app.post("/deleteAppointment", function (req, res) {
   //res.redirect("/login")
 
 
-  /*User.find({})
+  User.find({})
     .limit(10)
     .exec(function (err, foundUsers) {
       console.log(foundUsers);
@@ -233,7 +232,7 @@ app.post("/deleteAppointment", function (req, res) {
         // res.send(foundUsers);
         res.render("welcomePage", { foundUsers: foundUsers });
       }
-    });*/
+    });
 });
 
 app.post("/addAppointment",  function (req, res) {
