@@ -15,12 +15,13 @@ const session = require("express-session");
 const ejs = require("ejs");
 const fs = require("fs");
 const helper = require("./helper");
+const cors = require("cors");
 
 const path = require('path')
 app.set('views','views')
 
 app.set("view engine", "ejs");
-
+app.use(cors())
 //Express session middleware
 app.use(
   session({
@@ -123,7 +124,7 @@ app
           } else {
             req.flash(
               "success",
-              "Registration successful! Please verify your email"
+              "inscription réussi!"
             );
             //sendMail(newUser.name, newUser.secretToken);
             res.redirect("register");
@@ -143,9 +144,11 @@ app
   });
 
 //user login
-app.post("/login", function (req, res) {
+app.post("/login", async function (req, res) {
   const userName = req.body.userName;
   //const password = req.body.password;
+
+ await User.updateMany({}, { $set: { deleteButton:false} });
 
   User.findOne({ name2: userName },  function (err, foundUser) {
     if (err) {
@@ -170,28 +173,33 @@ app.post("/login", function (req, res) {
       console.log(foundUser);
 
       console.log("testllll");
-      User.find({}).exec(function (err, foundUsers) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log("eomeooo");
-            //res.sendFile(__dirname + "/public/welcomePage.html");
-            res.render("welcomePage", {
-              //playerhighestLevel: foundUser.time,
-              foundUsers: foundUsers,helper:helper
-            });
-
-            //res.send(foundUsers);
-          }
-        });
+     
 
       //req.flash("incorrectPassword", "incorrect password,please Try again");
       //res.redirect("/");
     }
   });
-});
+  User.find({}).exec(function (err, foundUsers) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("eomeooo");
+      //res.sendFile(__dirname + "/public/welcomePage.html");
+      res.render("welcomePage", {
+        //playerhighestLevel: foundUser.time,
+        foundUsers: foundUsers,helper:helper
+      });
 
-app.post("/deleteAppointment", function (req, res) {
+      //res.send(foundUsers);
+    }
+  });
+}
+
+
+
+);
+
+app.post("/deleteAppointment", async function (req, res) {
   console.log("hellotesttttt");
   const { id } = JSON.parse(req.body.userId)
 
@@ -200,7 +208,7 @@ app.post("/deleteAppointment", function (req, res) {
   console.log(userId);
   if (id !== userId) return;
  
-  User.findOne({ _id: userId }, function (err, foundUser) {
+  await User.findOne({ _id: userId }, function (err, foundUser) {
     if (err) {
       console.log(err);
     } else {
@@ -222,7 +230,7 @@ app.post("/deleteAppointment", function (req, res) {
   //res.redirect("/login")
 
 
-  User.find({})
+  await User.find({})
     .limit(10)
     .exec(function (err, foundUsers) {
       console.log(foundUsers);
@@ -235,14 +243,14 @@ app.post("/deleteAppointment", function (req, res) {
     });
 });
 
-app.post("/addAppointment",  function (req, res) {
+app.post("/addAppointment",  async function (req, res) {
   console.log(helper)
   const { time } = req.body;
   console.log(time);
 
   const userId = req.session.userId;
   console.log(userId);
-   User.findOne({ _id: userId }, function (err, foundUser) {
+  await  User.findOne({ _id: userId }, async function (err, foundUser) {
     if (!foundUser) {
       //TODO
       return;
@@ -256,7 +264,7 @@ app.post("/addAppointment",  function (req, res) {
     if (foundUser.time === time && foundUser.table1 === true) {
       console.log("hello");
       
-  User.find({}).exec(function (err, foundUsers) {
+  await  User.find({}).exec(function (err, foundUsers) {
     console.log(foundUsers);
     if (err) {
       console.log(err);
@@ -278,15 +286,6 @@ app.post("/addAppointment",  function (req, res) {
    
   });
 
-  User.find({}).exec(function (err, foundUsers) {
-    console.log(foundUsers);
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("table1");
-      res.render("welcomePage", { foundUsers: foundUsers, helper:helper});
-    }
-  });
 });
 
 

@@ -4,7 +4,31 @@
 
 <main>
 
-
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-5 col-md-10 col-lg-12">
+        <form action="/logout" method="get">
+          <button
+            style="
+              position: relative;
+              left:150px;
+              bottom:10px;
+              height: 40px;
+              width: 80px;
+              border-top-width: 0px;
+              border-bottom-width: 0px;
+              border-left-width: 0px;
+              border-right-width: 0px;
+            "
+            class=" btn-danger  btn-sm"
+            type="submit"
+          >
+            logout
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-5 col-md-10 col-lg-12">
@@ -25,9 +49,9 @@
             hidden
           />
         </div>
-        <button class="btn-success btn-sm">Ajouter</button>
+        <button class="btn-success btn-sm">Ajouter 8:00 - 09:30</button>
       </form>
-      <button class="btn-info btn-sm" onclick="">Vendredi 8:50 - 10:50</button>
+      <button class="btn-info btn-sm" onclick="">Vendredi</button>
       <table>
         <thead>
           <tr>
@@ -47,7 +71,10 @@
             <td class="team"><%- foundUser.name%></td>
             
             <td class="points">
-              <%- foundUser.time %> <button class="btn-primary btn-sm">supprimer</button>
+              <%- foundUser.time %>
+              <%if(foundUser.deleteButton){%>
+               <button id="supprimer1" class="btn-primary btn-sm">supprimer</button>
+               <%}%>
             </td>
             <td class="rank" hidden><%-foundUser.id %></td>
           </tr>
@@ -78,11 +105,11 @@
             hidden
           />
         </div>
-        <button class="btn-success btn-sm">Ajouter</button>
+        <button class="btn-success btn-sm">Ajouter 11:00 - 12:30</button>
       </form>
       
       
-      <button class="btn-info btn-sm" onclick="">Samedi 11.50 - 13:50</button>
+      <button class="btn-info btn-sm" onclick="">Samedi</button>
       <table>
         <thead>
           <tr>
@@ -100,7 +127,9 @@
             <td class="team"><%= foundUser.name%></td>
 
             <td class="points">
-              <%= foundUser.time %> <button class="btn-primary btn-sm">supprimer</button>
+              <%= foundUser.time %>  <%if(foundUser.deleteButton){%>
+                <button id="supprimer2" class="btn-primary btn-sm">supprimer</button>
+                <%}%>
             </td>
             <td class="rank" hidden><%=foundUser.id %></td>
           </tr>

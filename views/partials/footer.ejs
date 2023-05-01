@@ -8,17 +8,23 @@
 </script>
 <script type="text/javascript">
   function deleteAppoinment(foundUser) {
+    
     console.log("works");
-    const foundUserId = foundUser.lastElementChild.innerHTML;
-    console.log(foundUserId);
-    $.post("https://cyan-outrageous-rooster.cyclic.app/deleteAppointment", {
+   const foundUserId = foundUser.lastElementChild.innerHTML;
+  
+    $.post("http://localhost:3000/deleteAppointment", {
       userId: JSON.stringify({
         id: foundUserId,
       }),
       function(data, status) {
-        console.log(data);
 
-        //window.location.reload();
+        console.log("hello")
+        window.location.reload();
+       
+  //document.getElementById("supprimer1").remove();  
+  $("#supprimer1").attr("hidden",true); 
+console.log($("#supprimer1").attr("data-id") )  
+      
       },
     });
   }

@@ -65,11 +65,11 @@
             <td class="team"><%= foundUser.name%></td>
 
             <td class="points">
-              <%= foundUser.time %> <button>supprimer</button>
+              <%= foundUser.time %> <button id="supprimer">supprimer</button>
             </td>
             <td class="rank" hidden><%=foundUser.id %></td>
           </tr>
-          <%})%> <%window.location.reload()%>
+          <%})%>
         </tbody>
       </table>
     </div>
@@ -79,7 +79,7 @@
 <script type="text/javascript">
   function deleteAppoinment(foundUser) {
     const foundUserId = foundUser.lastElementChild.innerHTML;
-    $.post("https://cyan-outrageous-rooster.cyclic.app/deleteAppointment", {
+    $.post("localhost:3000/deleteAppointment", {
       userId: JSON.stringify({
         id: foundUserId,
       }),
@@ -93,7 +93,7 @@
 
   function addAppoinment() {
     console.log("hello");
-    $.post("https://cyan-outrageous-rooster.cyclic.app/addAppointment", {
+    $.post("ocalhost:3000/addAppointment", {
       bookedTime: JSON.stringify({
         time: "8:50-10:50",
       }),
