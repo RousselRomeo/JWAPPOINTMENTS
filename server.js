@@ -7,21 +7,21 @@ const app = express();
 
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const randomstring = require("randomstring");
-const nodemailer = require("nodemailer");
+//const randomstring = require("randomstring");
+//const nodemailer = require("nodemailer");
 //const flash = require("express-flash");
 const flash = require("connect-flash");
 const session = require("express-session");
 const ejs = require("ejs");
 const fs = require("fs");
 const helper = require("./helper");
-const cors = require("cors");
+//const cors = require("cors");
 
 const path = require('path')
 app.set('views','views')
 
 app.set("view engine", "ejs");
-app.use(cors())
+//app.use(cors())
 //Express session middleware
 app.use(
   session({
@@ -63,10 +63,7 @@ mongoose.connect("mongodb+srv://roussel:tchatchou111@cluster0.mxzx2.mongodb.net/
 });
 
 const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    //required: [true, "please specify name a name in the name field"],
-  },
+  name: { type: String,default:""},
   name2: String,
   table1: { type: Boolean, default: false },
   table2: { type: Boolean, default: false },
@@ -170,8 +167,7 @@ app.post("/login", async function (req, res) {
       req.session.userId = foundUser._id;
       foundUser.deleteButton = true;
       foundUser.save();
-      console.log(foundUser);
-
+     
       console.log("testllll");
      
 
@@ -203,10 +199,23 @@ app.post("/deleteAppointment", async function (req, res) {
   console.log("hellotesttttt");
   const { id } = JSON.parse(req.body.userId)
 
-  console.log(id);
+
   const userId = req.session.userId;
-  console.log(userId);
-  if (id !== userId) return;
+
+  if (id !== userId) {
+
+    await User.find({})
+    .limit(10)
+    .exec(function (err, foundUsers) {
+  
+      if (err) {
+        console.log(err);
+      } else {
+        // res.send(foundUsers);
+        res.render("welcomePage", { foundUsers: foundUsers });
+      }
+    });
+  }
  
   await User.findOne({ _id: userId }, function (err, foundUser) {
     if (err) {
@@ -233,7 +242,7 @@ app.post("/deleteAppointment", async function (req, res) {
   await User.find({})
     .limit(10)
     .exec(function (err, foundUsers) {
-      console.log(foundUsers);
+  
       if (err) {
         console.log(err);
       } else {
@@ -243,29 +252,64 @@ app.post("/deleteAppointment", async function (req, res) {
     });
 });
 
+
+app.get("/addAppointment", async function(req, res) {
+  console.log("got in")
+  await User.find({})
+  .limit(10)
+  .exec(function (err, foundUsers) {
+ 
+    if (err) {
+      console.log(err);
+    } else {
+      // res.send(foundUsers);
+      res.render("welcomePage", { foundUsers: foundUsers });
+    }
+  });
+
+})
 app.post("/addAppointment",  async function (req, res) {
-  console.log(helper)
+
   const { time } = req.body;
-  console.log(time);
+
 
   const userId = req.session.userId;
-  console.log(userId);
+
   await  User.findOne({ _id: userId }, async function (err, foundUser) {
     if (!foundUser) {
       //TODO
-      return;
+      User.find({}).exec(function (err, foundUsers) {
+    
+        if (err) {
+          console.log(err);
+        } else {
+          res.render("welcomePage", { foundUsers: foundUsers });
+        }
+      });
+ 
     }
 
-    if (foundUser.name === "") {
+    if (foundUser.name === "" || foundUser.name===null) {
       foundUser.name = foundUser.name2;
       // foundUser.save();
       console.log("adding no name");
+   await  User.find({}).exec(function (err, foundUsers) {
+      
+        if (err) {
+          console.log(err);
+        } else {
+          res.render("welcomePage", { foundUsers: foundUsers });
+        }
+      });
     }
+
+
+
     if (foundUser.time === time && foundUser.table1 === true) {
       console.log("hello");
       
   await  User.find({}).exec(function (err, foundUsers) {
-    console.log(foundUsers);
+
     if (err) {
       console.log(err);
     } else {
@@ -280,6 +324,15 @@ app.post("/addAppointment",  async function (req, res) {
       foundUser.table2 = false;
       foundUser.table1 = true;
       foundUser.save();
+
+      User.find({}).exec(function (err, foundUsers) {
+       
+        if (err) {
+          console.log(err);
+        } else {
+          res.render("welcomePage", { foundUsers: foundUsers });
+        }
+      });
       
     }
 
