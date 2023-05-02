@@ -32,7 +32,7 @@
             <button onclick="store()" class="btn-light">se connecter</button>
             <a
               style="margin-left: 40px"
-              href="https://cyan-outrageous-rooster.cyclic.app/register"
+              href="http://localhost:3000/register"
               class="btn-light"
               >s'enregistrer</a
             >
@@ -59,18 +59,7 @@
     //localStorage.setItem("password", inputPassword.value);
   }
 
-  function login() {
-    console.log("hello");
-    $.post("https://cyan-outrageous-rooster.cyclic.app/login", {
-      bookedTime: JSON.stringify({
-        time: "8:50-10:50",
-      }),
-      function(data, status) {
-        console.log(status);
-        console.log(data);
-      },
-    });
-  }
+ 
 </script>
 
 <%- include("partials/footer"); -%>

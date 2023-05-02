@@ -12,7 +12,7 @@
     console.log("works");
    const foundUserId = foundUser.lastElementChild.innerHTML;
   
-    $.post("https://cyan-outrageous-rooster.cyclic.app/deleteAppointment", {
+    $.post("http://localhost:3000/deleteAppointment", {
       userId: JSON.stringify({
         id: foundUserId,
       }),
@@ -22,8 +22,8 @@
         window.location.reload();
        
   //document.getElementById("supprimer1").remove();  
-  $("#supprimer1").attr("hidden",true); 
-console.log($("#supprimer1").attr("data-id") )  
+  //$("#supprimer1").attr("hidden",true); 
+//console.log($("#supprimer1").attr("data-id") )  
       
       },
     });
