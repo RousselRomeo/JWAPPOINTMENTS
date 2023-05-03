@@ -14,7 +14,7 @@
               left:150px;
               bottom:10px;
               height: 40px;
-              width: 80px;
+              width: 95px;
               border-top-width: 0px;
               border-bottom-width: 0px;
               border-left-width: 0px;
@@ -23,7 +23,7 @@
             class=" btn-danger  btn-sm"
             type="submit"
           >
-            logout
+            Deconnecter
           </button>
         </form>
       </div>
@@ -65,7 +65,7 @@
           <% var num=1 %> <% foundUsers.forEach(function(foundUser){ %>
            
           <%if(foundUser.table1){%>
-          <tr  onclick="deleteAppoinment(this)">
+          <tr id="supprimer1"  onclick="deleteAppoinment(this)">
             <td class="rank"><%- num++ %></td>
 
             <td class="team"><%- foundUser.name%></td>
@@ -73,7 +73,7 @@
             <td class="points">
               <%- foundUser.time %>
               <%if(foundUser.deleteButton){%>
-               <button id="supprimer1" class="btn-primary btn-sm">supprimer</button>
+               <button  id="supprimer1"  class="btn-primary btn-sm">supprimer</button>
                <%}%>
             </td>
             <td class="rank" hidden><%-foundUser.id %></td>

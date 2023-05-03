@@ -81,21 +81,24 @@ app.get("/", function (req, res) {
 });
 
 app.get("/logout", function (req, res) {
-  const id = req.session.userId;
+ /* const id = req.session.userId;
   if (!id) {
     //res.sendFile(__dirname + "/public/login.html");
-    res.render("login");
-  }
+    //res.render("login");
+    res.redirect("/");
+  }*/
   
+  if(req.session){
+
+    req.session.destroy() 
+    
+   res.redirect("/");
+       //res.render("login")
+      
+
+  }
   //console.log(req.session);
-  req.session.destroy(function (err) {
-    if (err) {
-      console.log(err);
-    } else {
-     // res.redirect("/");
-     res.render("login")
-    }
-  });
+ 
 });
 
 //Register user
@@ -151,13 +154,15 @@ app.post("/login", async function (req, res) {
     if (err) {
       console.log(err);
     }
+
     if (!foundUser) {
       req.flash(
         "error",
-        "No user found with the specified name,Please Register!!"
+        "Nom d'utilisateur inexistant, veuillez vous enregister!!!"
       );
-      //res.redirect("/");
-      res.render("login")
+      
+     return res.redirect("/");
+      //res.render("login")
     } else {
       //(foundUser.password === password && foundUser.playerName === "")
       //req.session.userId = foundUser._id;
@@ -170,12 +175,27 @@ app.post("/login", async function (req, res) {
      
       console.log("testllll");
      
+      User.find({}).exec(function (err, foundUsers) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("eomeooo");
+          //res.sendFile(__dirname + "/public/welcomePage.html");
+          res.render("welcomePage", {
+            //playerhighestLevel: foundUser.time,
+            foundUsers: foundUsers,helper:helper
+          });
+    
+          //res.send(foundUsers);
+        }
+      });
 
       //req.flash("incorrectPassword", "incorrect password,please Try again");
       //res.redirect("/");
     }
   });
-  User.find({}).exec(function (err, foundUsers) {
+
+  /*User.find({}).exec(function (err, foundUsers) {
     if (err) {
       console.log(err);
     } else {
@@ -188,7 +208,7 @@ app.post("/login", async function (req, res) {
 
       //res.send(foundUsers);
     }
-  });
+  });*/
 }
 
 
@@ -268,31 +288,43 @@ app.get("/addAppointment", async function(req, res) {
   });
 
 })
+
+
+
+
 app.post("/addAppointment",  async function (req, res) {
 
   const { time } = req.body;
 
 
   const userId = req.session.userId;
-
+ console.log(userId);
   await  User.findOne({ _id: userId }, async function (err, foundUser) {
     if (!foundUser) {
       //TODO
-      User.find({}).exec(function (err, foundUsers) {
+     /* User.find({}).exec(function (err, foundUsers) {
     
         if (err) {
           console.log(err);
         } else {
           res.render("welcomePage", { foundUsers: foundUsers });
         }
-      });
+      });*/
+      return res.redirect("/addAppointment")
  
     }
+ 
+ 
 
+
+  console.log(foundUser.name)
     if (foundUser.name === "" || foundUser.name===null) {
       foundUser.name = foundUser.name2;
-      // foundUser.save();
+       foundUser.save();
       console.log("adding no name");
+         
+    return  res.redirect("/addAppointment")
+      /*
    await  User.find({}).exec(function (err, foundUsers) {
       
         if (err) {
@@ -300,7 +332,7 @@ app.post("/addAppointment",  async function (req, res) {
         } else {
           res.render("welcomePage", { foundUsers: foundUsers });
         }
-      });
+      });*/
     }
 
 
@@ -308,7 +340,7 @@ app.post("/addAppointment",  async function (req, res) {
     if (foundUser.time === time && foundUser.table1 === true) {
       console.log("hello");
       
-  await  User.find({}).exec(function (err, foundUsers) {
+  /*await  User.find({}).exec(function (err, foundUsers) {
 
     if (err) {
       console.log(err);
@@ -316,8 +348,8 @@ app.post("/addAppointment",  async function (req, res) {
       console.log("table1");
       res.render("welcomePage", { foundUsers: foundUsers, helper:helper});
     }
-  });
-      
+  });*/
+  return  res.redirect("/addAppointment")
       
     } else {
       foundUser.time = time;
@@ -325,14 +357,15 @@ app.post("/addAppointment",  async function (req, res) {
       foundUser.table1 = true;
       foundUser.save();
 
-      User.find({}).exec(function (err, foundUsers) {
+     /* User.find({}).exec(function (err, foundUsers) {
        
         if (err) {
           console.log(err);
         } else {
           res.render("welcomePage", { foundUsers: foundUsers });
         }
-      });
+      });*/
+      return  res.redirect("/addAppointment")
       
     }
 
@@ -354,25 +387,21 @@ app.post("/addAppointment2", function (req, res) {
   User.findOne({ _id: userId },  function (err, foundUser) {
     if (!foundUser) {
       //TODO
-   
+      return res.redirect("/addAppointment")
     }
 
-    if (foundUser.name === "") {
+    if (foundUser.name === "" || foundUser.name===null) {
       foundUser.name = foundUser.name2;
       foundUser.save();
-      console.log("adding no name");
+      console.log("adding table2 no name");
+      return  res.redirect("/addAppointment")
     }
+
+
+
     if (foundUser.time === time && foundUser.table2 === true) {
       
-  User.find({}).exec(function (err, foundUsers) {
-    console.log(foundUsers);
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("table1");
-      res.render("welcomePage", { foundUsers: foundUsers, helper:helper});
-    }
-  });
+      return  res.redirect("/addAppointment")
       
     } else {
       foundUser.time = time;
@@ -380,22 +409,12 @@ app.post("/addAppointment2", function (req, res) {
       foundUser.table2 = true;
       foundUser.save();
       console.log("table2")
-      User.find({}).exec(function (err, foundUsers) {
-          //console.log(foundUsers);
-          if (err) {
-            console.log(err);
-          } else {
-            res.render("welcomePage", { foundUsers: foundUsers });
-          }
-        });
+
+      return  res.redirect("/addAppointment")
+   
     }
 
-    console.log(foundUser);
-    if (err) {
-      console.log(err);
-    } else {
-      //console.log("hellllllo");
-    }
+   
   });
 });
 
