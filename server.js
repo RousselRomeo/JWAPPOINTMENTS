@@ -217,27 +217,19 @@ app.post("/login", async function (req, res) {
 
 app.post("/deleteAppointment", async function (req, res) {
   console.log("hellotesttttt");
-  const { id } = JSON.parse(req.body.userId)
+  const id=req.body.id
+ // const { id } = JSON.parse(req.body.userId)
 
 
   const userId = req.session.userId;
 
   if (id !== userId) {
 
-    await User.find({})
-    .limit(10)
-    .exec(function (err, foundUsers) {
-  
-      if (err) {
-        console.log(err);
-      } else {
-        // res.send(foundUsers);
-        res.render("welcomePage", { foundUsers: foundUsers });
-      }
-    });
+    return res.redirect("/addAppointment")
+ 
   }
  
-  await User.findOne({ _id: userId }, function (err, foundUser) {
+  await User.findOne({ _id: userId }, async function (err, foundUser) {
     if (err) {
       console.log(err);
     } else {
@@ -246,7 +238,12 @@ app.post("/deleteAppointment", async function (req, res) {
       foundUser.time = "";
       foundUser.save();
       
-   
+
+    const foundUsers =  await User.find({})
+    console.log(foundUsers)
+      
+  res.status(200).send(foundUsers);
+ 
 
     }
   });
@@ -259,17 +256,7 @@ app.post("/deleteAppointment", async function (req, res) {
   //res.redirect("/login")
 
 
-  await User.find({})
-    .limit(10)
-    .exec(function (err, foundUsers) {
-  
-      if (err) {
-        console.log(err);
-      } else {
-        // res.send(foundUsers);
-        res.render("welcomePage", { foundUsers: foundUsers });
-      }
-    });
+ 
 });
 
 
@@ -301,15 +288,7 @@ app.post("/addAppointment",  async function (req, res) {
  console.log(userId);
   await  User.findOne({ _id: userId }, async function (err, foundUser) {
     if (!foundUser) {
-      //TODO
-     /* User.find({}).exec(function (err, foundUsers) {
-    
-        if (err) {
-          console.log(err);
-        } else {
-          res.render("welcomePage", { foundUsers: foundUsers });
-        }
-      });*/
+   
       return res.redirect("/addAppointment")
  
     }
@@ -320,19 +299,12 @@ app.post("/addAppointment",  async function (req, res) {
   console.log(foundUser.name)
     if (foundUser.name === "" || foundUser.name===null) {
       foundUser.name = foundUser.name2;
+      foundUser.time=time
        foundUser.save();
       console.log("adding no name");
          
     return  res.redirect("/addAppointment")
-      /*
-   await  User.find({}).exec(function (err, foundUsers) {
-      
-        if (err) {
-          console.log(err);
-        } else {
-          res.render("welcomePage", { foundUsers: foundUsers });
-        }
-      });*/
+
     }
 
 
@@ -340,15 +312,7 @@ app.post("/addAppointment",  async function (req, res) {
     if (foundUser.time === time && foundUser.table1 === true) {
       console.log("hello");
       
-  /*await  User.find({}).exec(function (err, foundUsers) {
 
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("table1");
-      res.render("welcomePage", { foundUsers: foundUsers, helper:helper});
-    }
-  });*/
   return  res.redirect("/addAppointment")
       
     } else {
@@ -357,14 +321,7 @@ app.post("/addAppointment",  async function (req, res) {
       foundUser.table1 = true;
       foundUser.save();
 
-     /* User.find({}).exec(function (err, foundUsers) {
-       
-        if (err) {
-          console.log(err);
-        } else {
-          res.render("welcomePage", { foundUsers: foundUsers });
-        }
-      });*/
+ 
       return  res.redirect("/addAppointment")
       
     }
