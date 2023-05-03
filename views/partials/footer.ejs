@@ -14,47 +14,49 @@
 
 
 
-   /*$.ajax({
-    url : "http://localhost:3000/deleteAppointment",
-    type: "POST",
-    data : formData,
-    success: function(data, textStatus, jqXHR)
-    {
-        //data - response from server
-    },
-    error: function (jqXHR, textStatus, errorThrown)
-    {
- 
-    }
-});
-*/
 
 
-$.post("http://localhost:3000/deleteAppointment",
+
+$.post("https://cyan-outrageous-rooster.cyclic.app/deleteAppointment",
     {id: foundUserId},
-    function(data, textStatus, jqXHR)
-    {
-      console.log(data);
-          //data: Received from server
+    function(foundUsers, textStatus, jqXHR) {
+      
+      $("#table").empty();
+      
+      let num = 1;
+      
+      
+      $.each(foundUsers, function (index, foundUser) {
+            const deleteButton = foundUser.deleteButton
+              ? "<button class='btn-primary btn-sm'>supprimer</button>"
+              : "";
+
+            populateTable = `
+
+
+              <tr  onclick="deleteAppoinment(this)">
+                <td class="rank"> ${num++}</td>
+
+                <td class="team"> ${foundUser.name}</td>
+
+                <td class="points">
+                  ${foundUser.time}  ${deleteButton}
+                </td>
+                <td class="rank " hidden>${foundUser._id}</td>
+              </tr>
+
+
+                `;
+
+                $("#table").append(populateTable)   
+      
+              });
+      
+              
+    
     });
   
-  /*  $.post("http://localhost:3000/deleteAppointment", {
-      userId: JSON.stringify({
-        id: foundUserId,
-      }),
-      function(data, status) {
-            console.log(status)
-        console.log("hello")
-       
-
-        //window.location.reload();
-       
- // document.getElementById("supprimer1").remove();  
-  //$("#supprimer1").attr("hidden",true); 
-//console.log($("#supprimer1").attr("data-id") )  
-      
-      },
-    });*/
+ 
   }
 
  
