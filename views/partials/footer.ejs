@@ -22,11 +22,14 @@ $.post("https://cyan-outrageous-rooster.cyclic.app/deleteAppointment",
     function(foundUsers, textStatus, jqXHR) {
       
       $("#table").empty();
+      $("#table2").empty();
       
       let num = 1;
       
       
       $.each(foundUsers, function (index, foundUser) {
+
+            if(foundUser.table1){
             const deleteButton = foundUser.deleteButton
               ? "<button class='btn-primary btn-sm'>supprimer</button>"
               : "";
@@ -50,7 +53,37 @@ $.post("https://cyan-outrageous-rooster.cyclic.app/deleteAppointment",
 
                 $("#table").append(populateTable)   
       
-              });
+              }else{
+
+                const deleteButton = foundUser.deleteButton
+              ? "<button class='btn-primary btn-sm'>supprimer</button>"
+              : "";
+
+            populateTable = `
+
+
+              <tr  onclick="deleteAppoinment(this)">
+                <td class="rank"> ${num++}</td>
+
+                <td class="team"> ${foundUser.name}</td>
+
+                <td class="points">
+                  ${foundUser.time}  ${deleteButton}
+                </td>
+                <td class="rank " hidden>${foundUser._id}</td>
+              </tr>
+
+
+                `;
+
+                $("#table2").append(populateTable)   
+      
+
+
+
+              }
+            }
+              );
       
               
     

@@ -124,7 +124,7 @@ app
           } else {
             req.flash(
               "success",
-              "inscription réussi!"
+              "Inscription réussi!"
             );
             //sendMail(newUser.name, newUser.secretToken);
             res.redirect("register");
@@ -222,10 +222,14 @@ app.post("/deleteAppointment", async function (req, res) {
 
 
   const userId = req.session.userId;
+  console.log(id);
+  console.log(userId);
+
+
 
   if (id !== userId) {
 
-    return res.redirect("/addAppointment")
+    return res.redirect("/addAppointmentAfterDelete")
  
   }
  
@@ -240,7 +244,7 @@ app.post("/deleteAppointment", async function (req, res) {
       
 
     const foundUsers =  await User.find({})
-    console.log(foundUsers)
+  
       
   res.status(200).send(foundUsers);
  
@@ -276,6 +280,29 @@ app.get("/addAppointment", async function(req, res) {
 
 })
 
+
+
+
+
+app.get("/addAppointmentAfterDelete", async function(req, res) {
+  console.log("got in")
+
+  const foundUsers =  await User.find({})
+
+  res.status(200).send(foundUsers);
+ /* await User.find({})
+  .limit(10)
+  .exec(function (err, foundUsers) {
+ 
+    if (err) {
+      console.log(err);
+    } else {
+      // res.send(foundUsers);
+      res.render("welcomePage", { foundUsers: foundUsers });
+    }
+  });*/
+
+})
 
 
 
